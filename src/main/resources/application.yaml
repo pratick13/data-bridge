@@ -8,3 +8,13 @@ spring:
 
 server:
   port: 8000
+
+logging:
+  level:
+    com.example: DEBUG
+    org.springframework.web: ERROR
+  file:
+    name: app.log
+    path: logs
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
