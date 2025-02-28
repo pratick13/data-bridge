@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "com.syncbridge.gen.proto";
+
+service SchemaManagerService {
+    rpc uploadSchema (UploadFileRequest) returns (Response);
+}
+
+message UploadFileRequest {
+    string file_name = 1;
+    bytes file_content = 2;
+}
+
+message Response {
+    bool success = 1;
+    string message = 2;
+    string description = 3;
+}
