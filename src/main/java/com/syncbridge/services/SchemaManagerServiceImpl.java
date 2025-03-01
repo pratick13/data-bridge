@@ -6,6 +6,7 @@ import com.syncbridge.gen.proto.SchemaManagerServiceGrpc;
 import com.syncbridge.gen.proto.SchemaManagerServiceOuterClass.Response;
 import com.syncbridge.gen.proto.SchemaManagerServiceOuterClass.UploadFileRequest;
 import io.grpc.stub.StreamObserver;
+import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+@GrpcService
 public class SchemaManagerServiceImpl extends SchemaManagerServiceGrpc.SchemaManagerServiceImplBase {
 
     private static final Logger logger = LoggerFactory.getLogger(SchemaManagerServiceImpl.class);
@@ -58,8 +60,6 @@ public class SchemaManagerServiceImpl extends SchemaManagerServiceGrpc.SchemaMan
         response = Response.newBuilder().setSuccess(true).setMessage("Schema uploaded successfully").build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
-
-        return;
     }
 
 }

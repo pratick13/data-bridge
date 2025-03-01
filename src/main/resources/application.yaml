@@ -6,8 +6,10 @@ spring:
     mongodb:
       uri: mongodb+srv://pratick13:Ke8bxduVgTSMKdqs@cluster0.rfftg.mongodb.net/syncbridgeDB?retryWrites=true&w=majority
 
-server:
-  port: 8000
+grpc:
+  server:
+    port: 9000
+    health-check-enabled: true
 
 logging:
   level:
