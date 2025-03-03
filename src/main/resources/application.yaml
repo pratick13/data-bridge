@@ -13,10 +13,14 @@ grpc:
 
 logging:
   level:
-    com.example: DEBUG
+    root: INFO
+    com.mongodb: ERROR
     org.springframework.web: ERROR
+    com.syncbridge: DEBUG
   file:
-    name: app.log
-    path: logs
+    name: logs/app.log
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} %level [%t]: %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %level [%t]: %msg%n"
+
+
