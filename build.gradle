@@ -22,7 +22,6 @@ repositories {
 dependencies {
     // Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter'
 
 	// gRPC
 	implementation 'net.devh:grpc-spring-boot-starter:3.1.0.RELEASE'
@@ -33,7 +32,7 @@ dependencies {
 	implementation 'io.grpc:grpc-protobuf:1.70.0'
     implementation 'com.google.protobuf:protobuf-java:4.29.3'
 
-    // Database
+    // MongoDB
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
 	// Javax

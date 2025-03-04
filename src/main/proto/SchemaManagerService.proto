@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 option java_package = "com.syncbridge.gen.proto";
+option java_outer_classname = "SchemaManagerServiceMessage";
 
 service SchemaManagerService {
     rpc uploadSchema (UploadFileRequest) returns (Response);
