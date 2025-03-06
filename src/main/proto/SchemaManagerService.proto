@@ -9,11 +9,15 @@ message Response {
     string description = 3;
 }
 
-message UploadFileRequest {
-    string file_name = 1;
-    bytes file_content = 2;
+message SchemaUploadRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string io_type = 4;
+    bytes file_content = 5;
+    string requester = 6;
 }
 
 service SchemaManagerService {
-    rpc uploadSchema (UploadFileRequest) returns (Response);
+    rpc uploadSchema (SchemaUploadRequest) returns (Response);
 }
