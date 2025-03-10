@@ -1,20 +1,14 @@
 package com.syncbridge.core.services.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syncbridge.core.db.models.SchemalessDataModelEntity;
 import com.syncbridge.core.db.repositories.SchemalessDataModelRepository;
 import com.syncbridge.core.services.SchemaManagerService;
 import com.syncbridge.core.utils.helper.TimeUtility;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
 
 @Service
 public class SchemaManagerServiceImpl implements SchemaManagerService {
@@ -33,25 +27,18 @@ public class SchemaManagerServiceImpl implements SchemaManagerService {
   }
 
   @Override
-  public void persistSchemaModel(
+  public String persistSchemaModel(
     String id,
     String name,
     String description,
     String ioType,
     byte[] data,
     String requester
-  ) throws IOException {
-    logger.info("Uploading schema {} ...", name);
-
-    InputStream iStream = new ByteArrayInputStream(data);
-    JsonNode jsonNode = new ObjectMapper().readTree(iStream);
-
-    logger.info("Valid json schema uploaded");
-
+  ) {
+    Document document = Document.parse(new String(data));
 
     if (id != null && !id.isEmpty()) {
-      SchemalessDataModelEntity modelData =
-        this.schemalessDataModelRepository.findById(id).orElse(null);
+      SchemalessDataModelEntity modelData = this.schemalessDataModelRepository.findById(id).orElse(null);
 
       if (modelData != null) {
         modelData.setName(name);
@@ -59,10 +46,13 @@ public class SchemaManagerServiceImpl implements SchemaManagerService {
         modelData.setIoType(ioType);
         modelData.setUpdatedBy(requester);
         modelData.setUpdatedDate(this.timeUtility.getCurrentTime());
-        modelData.setData(jsonNode);
+        modelData.setData(document);
         this.schemalessDataModelRepository.save(modelData);
+      } else {
+        String message = String.format("Schema model '%s' with id '%s' not found", name, id);
+        this.logger.error(message);
+        throw new NullPointerException(message);
       }
-
     } else {
       SchemalessDataModelEntity modelData = new SchemalessDataModelEntity(
         name,
@@ -70,14 +60,11 @@ public class SchemaManagerServiceImpl implements SchemaManagerService {
         ioType,
         requester,
         this.timeUtility.getCurrentTime(),
-        jsonNode
+        document
       );
-      this.schemalessDataModelRepository.save(modelData);
+      id = this.schemalessDataModelRepository.save(modelData).getId();
     }
 
-    if (jsonNode != null) {
-//      this.schemalessDataModelRepository.save();
-    }
-
+    return id;
   }
 }

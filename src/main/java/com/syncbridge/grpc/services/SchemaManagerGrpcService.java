@@ -2,10 +2,12 @@ package com.syncbridge.grpc.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.protobuf.ByteString;
 import com.syncbridge.core.services.SchemaManagerService;
 import com.syncbridge.gen.proto.SchemaManagerServiceGrpc;
 import com.syncbridge.gen.proto.SchemaManagerServiceMessage.Response;
 import com.syncbridge.gen.proto.SchemaManagerServiceMessage.SchemaUploadRequest;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
@@ -19,13 +21,12 @@ import java.io.InputStream;
 public class SchemaManagerGrpcService
   extends SchemaManagerServiceGrpc.SchemaManagerServiceImplBase {
 
-  private final Logger logger;
-  private final SchemaManagerService schemaManagerService;
+  private final Logger logger = LoggerFactory.getLogger(SchemaManagerGrpcService.class);;
+  private SchemaManagerService schemaManagerService;
 
   @Autowired
-  public SchemaManagerGrpcService(SchemaManagerService schemaManagerService) {
+  public void setSchemaManagerService(SchemaManagerService schemaManagerService) {
     this.schemaManagerService = schemaManagerService;
-    this.logger = LoggerFactory.getLogger(SchemaManagerGrpcService.class);
   }
 
   @Override
@@ -33,20 +34,22 @@ public class SchemaManagerGrpcService
     SchemaUploadRequest request,
     StreamObserver<Response> responseObserver
   ) {
-    Response response;
-
     try {
       String name = request.getName();
-      logger.info("Uploading schema {} ...", name);
+      logger.info("Uploading schema for '{}' model ...", name);
 
       byte[] fileBytes = request.getFileContent().toByteArray();
       InputStream iStream = new ByteArrayInputStream(fileBytes);
       JsonNode jsonNode = new ObjectMapper().readTree(iStream);
 
-      logger.info("Valid json schema uploaded");
+      logger.info("Valid json schema uploaded for '{}' model", name);
+
+      String id = null;
 
       if (jsonNode != null) {
-        this.schemaManagerService.persistSchemaModel(
+        logger.info("Persisting json schema '{}' in datastore", name);
+
+        id = this.schemaManagerService.persistSchemaModel(
           request.getId(),
           name,
           request.getDescription(),
@@ -55,27 +58,18 @@ public class SchemaManagerGrpcService
           request.getRequester()
         );
       }
-    } catch (Exception e) {
-      logger.error("Error processing file: {}", e.getMessage());
-      logger.error(e.toString());
 
-      response = Response.newBuilder()
-                         .setSuccess(false)
-                         .setMessage("Error processing file: " + e.getMessage())
-                         .setDescription(e.toString())
+      Response response = Response.newBuilder()
+                         .setSuccess(true)
+                         .setData(ByteString.copyFromUtf8("{\"id\":\"" + id + "\"}"))
+                         .setMessage("Schema uploaded successfully")
                          .build();
       responseObserver.onNext(response);
       responseObserver.onCompleted();
-
-      return;
+    } catch (Exception e) {
+      logger.error("Error processing file: {}", e.getMessage());
+      logger.error(e.toString());
+      responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
     }
-
-    response =
-      Response.newBuilder()
-              .setSuccess(true)
-              .setMessage("Schema uploaded successfully")
-              .build();
-    responseObserver.onNext(response);
-    responseObserver.onCompleted();
   }
 }

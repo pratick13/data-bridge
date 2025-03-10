@@ -5,8 +5,9 @@ option java_outer_classname = "SchemaManagerServiceMessage";
 
 message Response {
     bool success = 1;
-    string message = 2;
-    string description = 3;
+    bytes data = 2;
+    string message = 3;
+    string description = 4;
 }
 
 message SchemaUploadRequest {

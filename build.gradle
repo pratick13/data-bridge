@@ -46,7 +46,7 @@ dependencies {
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.grpc:grpc-testing:1.71.0'
 }
 
 protobuf {
@@ -67,6 +67,6 @@ protobuf {
     }
 }
 
-// tasks.named('test') {
-// 	useJUnitPlatform()
-// }
+test {
+ 	useJUnitPlatform()
+}
