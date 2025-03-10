@@ -21,7 +21,7 @@ import java.io.InputStream;
 public class SchemaManagerGrpcService
   extends SchemaManagerServiceGrpc.SchemaManagerServiceImplBase {
 
-  private final Logger logger = LoggerFactory.getLogger(SchemaManagerGrpcService.class);;
+  private final Logger logger = LoggerFactory.getLogger(SchemaManagerGrpcService.class);
   private SchemaManagerService schemaManagerService;
 
   @Autowired
@@ -60,10 +60,10 @@ public class SchemaManagerGrpcService
       }
 
       Response response = Response.newBuilder()
-                         .setSuccess(true)
-                         .setData(ByteString.copyFromUtf8("{\"id\":\"" + id + "\"}"))
-                         .setMessage("Schema uploaded successfully")
-                         .build();
+                                  .setSuccess(true)
+                                  .setData(ByteString.copyFromUtf8("{\"id\":\"" + id + "\"}"))
+                                  .setMessage("Schema uploaded successfully")
+                                  .build();
       responseObserver.onNext(response);
       responseObserver.onCompleted();
     } catch (Exception e) {
