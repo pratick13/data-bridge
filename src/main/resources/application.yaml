@@ -4,7 +4,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb+srv://pratick13:Ke8bxduVgTSMKdqs@cluster0.rfftg.mongodb.net/syncbridgeDB?retryWrites=true&w=majority
+      uri: mongodb+srv://pratick13:Ke8bxduVgTSMKdqs@cluster0.rfftg.mongodb.net/data-bridge-db?retryWrites=true&w=majority
 
 grpc:
   server:
@@ -19,7 +19,7 @@ logging:
     root: INFO
     com.mongodb: ERROR
     org.springframework.web: ERROR
-    com.syncbridge: DEBUG
+    com.databridge: DEBUG
   file:
     name: logs/app.log
   pattern:

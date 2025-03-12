@@ -1,12 +1,12 @@
-package com.syncbridge.grpc.services;
+package com.databridge.grpc.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.ByteString;
-import com.syncbridge.core.services.SchemaManagerService;
-import com.syncbridge.gen.proto.SchemaManagerServiceGrpc;
-import com.syncbridge.gen.proto.SchemaManagerServiceMessage.Response;
-import com.syncbridge.gen.proto.SchemaManagerServiceMessage.SchemaUploadRequest;
+import com.databridge.core.services.SchemaManagerService;
+import com.databridge.gen.proto.SchemaManagerServiceGrpc;
+import com.databridge.gen.proto.SchemaManagerServiceMessage.Response;
+import com.databridge.gen.proto.SchemaManagerServiceMessage.SchemaUploadRequest;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;

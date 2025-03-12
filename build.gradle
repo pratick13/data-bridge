@@ -6,7 +6,7 @@ plugins {
     id 'com.google.protobuf' version '0.9.4'
 }
 
-group = 'com.syncbridge'
+group = 'com.databridge'
 version = '0.0.1'
 
 java {
